@@ -85,7 +85,12 @@ void parseInst(Parameters*params,Parser*p){
 	if(!strcmp("var",token)){
 		char id_str[4];
 		Channel chan={};
-		fscanf(params->fin," reg %d %3[^ ] %"TXT(MAX_NAME)"[^ $]",&(chan.size),id_str,chan.name);
+		if (!fscanf(params->fin," reg %d %3[^ ] %"TXT(MAX_NAME)"[^ $]",&(chan.size),id_str,chan.name) &&
+			!fscanf(params->fin," wire %d %3[^ ] %"TXT(MAX_NAME)"[^ $]",&(chan.size),id_str,chan.name))
+		{
+			printf("I give up.\n");
+			exit(-1);
+		}
 		int id=char2id(id_str);
 		p->ch[id]=chan;//printf("size=%i <%c> name=<%s>\n",size,id,data);
 		p->ch[id].scope=p->cur_scopes;
